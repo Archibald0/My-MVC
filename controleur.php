@@ -8,9 +8,21 @@ define('DS', DIRECTORY_SEPARATOR); // définit si / ou \ suivant environement
 require_once(ROOT.DS.'conf'.DS.'_connect.php'); // shutdow si pas de fichier connect.php
 $destination_default = 'welcome';
 
-$classname = 'Users';
+/*$classnames = ['Users', 'Profil'];
+foreach ($classnames as $classname) {
+    require CLASSDIR.DS.$classname.'.php';
+}*/
 
-require CLASSDIR.DS.$classname.'.php';
+function loadClass($classname) {
+    if (file_exists(CLASSDIR.DS.$classname.'.php')) {
+        require CLASSDIR.DS.$classname.'.php';
+    } else {
+        require_once ROOT.'/vendor/autoload.php';
+    }
+}
+
+spl_autoload_register('loadClass');
+
 
 // Définition de la destination + filtre injection
 $destination = filter_input(INPUT_GET, 'destination', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
